@@ -1,0 +1,92 @@
+# coding:utf-8
+<!DOCTYPE HTML>
+<Html>
+	<head>
+		<meta charset='utf-8'>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maxinum-scale=1">
+		<title>Answer</title>
+		<link rel="stylesheet" href="../static/css/base.css">
+		<link rel="stylesheet" href="../static/css/dropzone.css">
+		<link rel="stylesheet" href="../static/layui/css/layui.css">
+	</head>
+	<body>
+        <div class="m-t-lg">
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">ajax上传</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div style="width:700px;">
+                            <div class="layui-form" action="">
+                                <div class="layui-form-item layui-form-text">
+                                    <label class="layui-form-label">json数据</label>
+                                    <div class="layui-input-block">
+                                        <textarea id="desc" style="width:300px" placeholder="请输入 Json 格式数据" class="layui-textarea"></textarea>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button class="layui-btn" lay-submit lay-filter="formDemo" id="data_upload">同步数据</button>
+                                        <button id="data_reset" class="layui-btn layui-btn-primary">重置</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">table操作</h2>
+                    <div class="layui-colla-content">
+                        <div style="width:500px;" class="m-l-lg">
+                            <table class="layui-table m-l-lg">
+                                <colgroup>
+                                    <col width="50">
+                                    <col width="150">
+                                    <col width="150">
+                                    <col width="100">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>name</th>
+                                        <th>age</th>
+                                        <th>operation</th>
+                                    </tr> 
+                                </thead>
+                                <tbody id="params_tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">日志解析</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div style="width:500px;">
+                <div class="layui-form-item m-t">
+                            <div class="layui-inline m-b">
+                                <label class="layui-form-label">上传文件</label>
+                                <div class="layui-input-inline m-b">
+                                    <div id="my-form" class="dropz well-lg" style="border:2px dashed rgba(28,38,232,0.3)" target="layui-upload-iframe" >
+                                        <div id="" class="dz-default dz-message">
+                                            <span>拖拽文件到此或点击上传</span>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="layui-form-item m-t">
+                                    <div class="layui-input-block">
+                                        <button id="upload_submit" class="layui-btn layui-btn-disabled" lay-submit="" disabled>立即提交</button>
+                                        <button id="upload_reset" type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<script src="../static/js/jquery-3.1.0.js"></script>
+		<script src="../static/layui/layui.js"></script>
+		<script src="../static/js/dropzone.js"></script>
+		<script src="../static/js/main.js"></script>
+    </body>
+</Html>

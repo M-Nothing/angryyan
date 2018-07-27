@@ -1,0 +1,26 @@
+.m-b {
+	margin-bottom: 15px !important;
+}
+.m-t {
+	margin-top: 15px !important;
+}
+
+.m-l-lg {
+	margin-left: 50px !important;
+}
+.m-t-lg {
+	margin-top: 50px !important;
+}
+
+.well-lg {
+	min-width:300px !important;
+}
+
+.result-show {
+	padding-left:50px;
+	padding-top:20px;
+}
+
+ul li dl dd {
+	padding-left:20px;
+}

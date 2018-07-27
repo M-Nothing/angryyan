@@ -13,19 +13,30 @@ PORT = 9099
 # 调试模式: True/False
 # 生产环境必须为False
 DEBUG = True
+PRO_NAME = 'angryyan'
 
 # 日志文件配置
-LOGFILE = 'stdout'
+if DEBUG:
+    LOGFILE = 'stdout'
+else :
+    LOGFILE = {
+        'root': {
+            'filename': {
+                'DEBUG': os.path.join(HOME,'../log','{}.info.log'.format(PRO_NAME)),
+                'ERROR': os.path.join(HOME,'../log','{}.error.log'.format(PRO_NAME)),
+            },
+        }
+    }
 
 # 数据库配置
 DATABASE = {
-    'test': {
+    'angryyan': {
         'engine':'mysql',
-        'db': 'angryyan_user',
+        'db': 'angryyan',
         'host': '127.0.0.1',
         'port': 3306,
         'user': 'root',
-        'passwd': 'dian:dian',
+        'passwd': 'abc.123',
         'charset': 'utf8',
         'conn': 16,
     },
