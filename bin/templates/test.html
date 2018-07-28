@@ -62,7 +62,7 @@
                     <h2 class="layui-colla-title">日志解析</h2>
                     <div class="layui-colla-content layui-show">
                         <div style="width:500px;">
-                <div class="layui-form-item m-t">
+                            <div class="layui-form-item m-t">
                             <div class="layui-inline m-b">
                                 <label class="layui-form-label">上传文件</label>
                                 <div class="layui-input-inline m-b">
@@ -76,11 +76,101 @@
                                     <div class="layui-input-block">
                                         <button id="upload_submit" class="layui-btn layui-btn-disabled" lay-submit="" disabled>立即提交</button>
                                         <button id="upload_reset" type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                        <a class="layui-btn layui-btn-warm" href="http://mydoc.angryyan.com/tt/sql.log">下载测试模板文件</a>
                                     </div>
                                 </div>
                              </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">实现代码</h2>
+                <div class="layui-colla-content layui-show">
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend>ajax请求处理json文件核心 Python 代码</legend>
+                        <div class="layui-field-box">
+                        <pre class="layui-code">
+                            # 存储json
+                            json_data = params.get('json_data', [])
+                            try:
+                                json.loads(json_data) # 检查json 格式是否规范
+                                with open("/home/owner/tmp.json","w") as f:
+                                    json.dump(json_data, f)
+                            except:
+                                exception_deal()
+
+
+                            # 读取json
+                            try:
+                                with open("/home/owner/tmp.json","r") as f:
+                                    data = json.load(f)
+                                    json_str = json.dumps(data)
+                            except:
+                                exception_deal()
+
+
+                            # 删除行回写json文件
+                            try:
+                                with open("/home/owner/tmp.json","r+") as f:
+                                    old_data = json.loads(json.load(f))
+                                    # 删除操作
+                                    new_data = old_data[:del_index] + old_data[del_index+1:]
+                                    json.dump(json.dumps(new_data), f)
+                            except:
+                                exception_deal()
+                            </pre>
+                        </div>
+                    </fieldset>
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend>日志文件解析</legend>
+                        <div class="layui-field-box">
+                            <pre class="layui-code">
+                            '''
+                            测试文件直接读取整个文件到内存,实际生产中可能需要先做 split 将日志切分处理,
+                            使用 future 模块多线程或多进程采用以下方式进行处理,汇总处理结果
+                            PS: 以下http长连接处理日志等待返回是不合理的,文件过大会导致 web-nginx-wsgi-server 链超时, 可使用gevent异步处理查询代替
+                            '''
+
+                            # 日志文件过滤，在规范日志格式的前提下，做简单处理，非规范格式需要根据实际情况
+                            log_data = os.popen('grep -E "DELETE|INSERT|UPDATE|SELECT" %s' % file_path).read().strip().split('\n')
+                            # 日志文件数据按分钟统计
+                            count_dict = {}
+                            for l in log_data:
+                                key = "%s_%s" % (l[0:16], l[21: -1])
+                                if l[0:16] and count_dict.has_key(l[0:16]):
+                                    count_dict[l[0:16]].update({l[21: -1]: count_dict[l[0:16]].get(l[21: -1], 0)+1})
+                                else:
+                                    count_dict.update({l[0: 16]: {l[21:-1]: 1}})
+
+                            # 每分钟内操作sql频率排序
+                            ret = map(lambda x: {x: sorted(count_dict[x].iteritems(), key=lambda e: -e[1])}, count_dict.keys())
+
+                            # 截取每分钟内操作频率最高的sql
+                            ret_dict = {}
+                            for item in ret:
+                                # 第二层 for 循环在每次一层循环中只执行一次
+                                for r_k, r_v in item.iteritems():
+                                    v = 0
+                                    for rv in range(0, len(r_v)):
+                                        # 可能出现并列第一的情况使用
+                                        if r_v[rv] and r_v[rv][1] >= v:
+                                            v = r_v[rv][1]
+                                        else:
+                                            ret_dict.update({r_k: r_v[0: rv]})
+                                            rv = len(r_v)
+                                    # 处理特殊情况
+                                    if not ret_dict.get(r_k):
+                                        ret_dict.update({r_k: r_v})
+                            # 最后使用神奇的python内存回收机制,大文件处理时必不可少
+                            gc.collect()
+                            
+                            # 假设日志按天分割, 每分钟执行sql语句去重以后数量为 a:
+                            # 时间复杂度: O(n) + O(a * loga) * 24*60 + O(24*60)
+                            # 空间复杂度: 不确定, 文件大小、是否使用future模式分批处理都会影响空间复杂度
+                            </pre>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
         </div>
